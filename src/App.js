@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'; 
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import './styles/styles.css';
+import Header from './components/Header';
+import Allies from './Pages/Allies'
+import Ally from './Pages/Ally'
+import Game from './Pages/Game'
+import Games from './Pages/Games'
+import Home from './Pages/Home'
+import Shows from './Pages/Shows'
+import { AllyContext } from './context/AllyContext'
+import allyDataService from './api/allyDataService'
 
-function App() {
+const App = () => {
+  const [allies, setAllies] = useState(null);
+  const [loadingAllies, setLoadingAllies] = useState(true);
+
+  useEffect(() => {
+    const getAllies = async () => {
+      const res = await allyDataService.getAll();
+      setAllies(res.data);
+      setLoadingAllies(false);
+    }
+    getAllies();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <AllyContext.Provider value={{allies, loadingAllies}} >
+      <Header />
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/games" component={Games} />
+        <Route path="/game/:id" component={Game} />
+        <Route path="/allies" component={Allies} />
+        <Route path="/ally/:id" component={Ally} />
+        <Route path="/shows" component={Shows} />
+        </Switch>
+      </AllyContext.Provider>
+    </Router>
+  )
 }
 
 export default App;
