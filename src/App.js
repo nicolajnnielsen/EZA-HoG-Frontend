@@ -10,6 +10,7 @@ import Home from './Pages/Home'
 import Shows from './Pages/Shows'
 import { AllyContext } from './context/AllyContext'
 import allyDataService from './api/allyDataService'
+import Footer from './components/Footer';
 
 const App = () => {
   const [allies, setAllies] = useState(null);
@@ -17,16 +18,29 @@ const App = () => {
 
   useEffect(() => {
     const getAllies = async () => {
-      const res = await allyDataService.getAll();
-      setAllies(res.data);
-      setLoadingAllies(false);
+      try {
+        const res = await allyDataService.getAll();
+        const allies = res.data.map((ally) => {
+          let count = 0;
+          ally.nominated_games.forEach((game) => {
+            if (game.inducted) {
+              count++;
+            }
+          });
+          return {...ally, inductionCount: count}
+        })
+        setAllies(allies);
+        setLoadingAllies(false);
+      } catch (error) {
+          console.log(error)
+      }
     }
     getAllies();
   }, []);
 
   return (
     <Router>
-      <AllyContext.Provider value={{allies, loadingAllies}} >
+      <AllyContext.Provider value={{allies, setAllies, loadingAllies}} >
       <Header />
       <Switch>
         <Route exact path="/" component={Home} />
@@ -35,7 +49,8 @@ const App = () => {
         <Route path="/allies" component={Allies} />
         <Route path="/ally/:id" component={Ally} />
         <Route path="/shows" component={Shows} />
-        </Switch>
+      </Switch>
+      <Footer />
       </AllyContext.Provider>
     </Router>
   )
