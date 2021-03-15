@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import AllyCard from '../components/AllyCard';
 import { AllyContext } from '../context/AllyContext';
 
 const Allies = () => {
@@ -17,10 +17,10 @@ const Allies = () => {
     // }, []);
 
     return (
-        <div>
+        <div className="container mx-auto flex flex-wrap justify-center">
             {loadingAllies && <p>Loading</p> }
-            {!loadingAllies && allies.map((ally, id) => (
-                <h1 key={id}><Link to={`/ally/${ally.slug}`}> {ally.name} </Link></h1>
+            {!loadingAllies && allies.map((ally, i) => (
+                <AllyCard key={i} ally={ally} />
             ))}
         </div>
     )
