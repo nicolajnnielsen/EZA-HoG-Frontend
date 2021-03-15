@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import gameDataService from '../api/gameDataService';
+import Loader from '../components/Loader';
 
 const Home = () => {
     const [games, setGames] = useState([]);
@@ -9,7 +10,7 @@ const Home = () => {
         const getGames = async () => {
             const res = await gameDataService.getAll();
             setGames(res.data);
-            setLoading(false);
+            // setLoading(false);
         }
 
         getGames();
@@ -17,7 +18,7 @@ const Home = () => {
 
     return (
         <div className="">
-            {isLoading && <h1>Loading</h1>}
+            {isLoading && <Loader />}
             {!isLoading && games.map((game, id) => {
                 return (
                     <h2 key={id} >{game.title}</h2>

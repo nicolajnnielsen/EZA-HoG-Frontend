@@ -6,4 +6,18 @@ body {
     margin: 0;
 }
 
+.loader {
+    position: absolute;
+    right: 50%;
+    top: 50%;
+}
+
+.loader span {
+    display: inline-block;
+    color: red;
+    font-size: 4rem;
+}
+
+
+
 @import "header.css";
